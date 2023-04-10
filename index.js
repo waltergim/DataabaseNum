@@ -113,7 +113,7 @@ app.post("/api/addnotes",(req,res)=>{
 
 app.use(unknownEndpoint)
 
-const PUERTO = process.env.PUERTO || 3001
+const PUERTO = process.env.PUERTO || 503
 app.listen(PUERTO, () =>{
     console.log(`el servidor esta escuchando en el puerto: ${PUERTO}`)
 })
