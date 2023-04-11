@@ -6,6 +6,7 @@ const cors = require('cors')
 app.use(cors())
 app.use(express.json())
 app.use(morgan("tiny"));
+app.use(express.static("build"));
 
 morgan.token("data",(req)=>{
   return req.method === "POST" ? JSON.stringify(req.body) : " "
@@ -90,7 +91,7 @@ app.delete("/api/notes/:id", (req, res) => {
     return maxId + 1
   }
 
-app.post("/api/addnotes",(req,res)=>{
+app.post("/api/notes",(req,res)=>{
      const note = req.body
 
      if(!note.name){
@@ -113,7 +114,7 @@ app.post("/api/addnotes",(req,res)=>{
 
 app.use(unknownEndpoint)
 
-const PUERTO = process.env.PUERTO || 503
+const PUERTO = process.env.PUERTO || 534  
 app.listen(PUERTO, () =>{
     console.log(`el servidor esta escuchando en el puerto: ${PUERTO}`)
 })
