@@ -3,4 +3,3 @@ node_modules
 #ignora la carpeta dist
 dist
 #ignora el PORT
-.env
