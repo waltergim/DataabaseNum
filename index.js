@@ -3,14 +3,9 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
-<<<<<<< HEAD
 
+ 
 const Note = require('./models/note')
-
-=======
-require('dotenv').config()
-const Note = require('./models/note')
->>>>>>> origin/main
 
 
 app.use(cors())
@@ -100,14 +95,7 @@ note.save().then(savedNote=>{
 
 app.use(unknownEndpoint)
 
-<<<<<<< HEAD
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`el servidor esta escuchando en el puerto: ${PORT}`)
 })
-=======
-const PUERTO = process.env.PORT
-app.listen(PUERTO, () => {
-  console.log(`el servidor esta escuchando en el puerto: ${PUERTO}`)
-})
->>>>>>> origin/main
