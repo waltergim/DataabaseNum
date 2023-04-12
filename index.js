@@ -1,9 +1,11 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
+
 const Note = require('./models/note')
-require('dotenv').config()
+
 
 
 app.use(cors())
@@ -21,38 +23,14 @@ morgan.token("data", (req) => {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
-let notes = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-
-];
+ 
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'esta ruta no existe capo' })
 }
 
 
-app.get("/", (req, res) => {
-  res.send('<h1>Hola como estan<h1/>')
-})
+ 
 
 app.get("/api/notes", (req, res) => {
 
@@ -91,12 +69,7 @@ app.delete("/api/notes/:id", (req, res) => {
   res.status(204).end("se elimino correctamente");
 });
 
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
-}
+ 
 
 app.post("/api/notes", (req, res) => {
  const body = req.body
@@ -122,7 +95,7 @@ note.save().then(savedNote=>{
 
 app.use(unknownEndpoint)
 
-const PUERTO = process.env.PORT
-app.listen(PUERTO, () => {
-  console.log(`el servidor esta escuchando en el puerto: ${PUERTO}`)
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+  console.log(`el servidor esta escuchando en el puerto: ${PORT}`)
 })
