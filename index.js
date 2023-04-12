@@ -2,11 +2,18 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
+const Note = require('./models/note')
+require('dotenv').config()
+
 
 app.use(cors())
 app.use(express.json())
 app.use(morgan("tiny"));
 app.use(express.static("dist"));
+
+ 
+ 
+
 
 morgan.token("data", (req) => {
   return req.method === "POST" ? JSON.stringify(req.body) : " "
@@ -48,7 +55,12 @@ app.get("/", (req, res) => {
 })
 
 app.get("/api/notes", (req, res) => {
-  res.json(notes)
+
+  Note.find({}).then(notes =>{
+    res.json(notes)
+  })
+
+  
 })
 
 app.get("/api/info", (req, res) => {
@@ -67,14 +79,9 @@ app.get("/api/info", (req, res) => {
 })
 
 app.get("/api/info/:id", (req, res) => {
-  const id = req.params.id
-  const note = notes.find(note => note.id == id)
-  if (note) {
-
-    res.json(note)
-  } else {
-    res.send("Esta id no existe.Porfavor ingrese una id valida")
-  }
+ Note.findById(req.params.id).then(note=>{
+  res.json(note)
+ })
 })
 
 app.delete("/api/notes/:id", (req, res) => {
@@ -92,29 +99,30 @@ const generateId = () => {
 }
 
 app.post("/api/notes", (req, res) => {
-  const note = req.body
+ const body = req.body
+ if(body.name === undefined){
+  return res.status(400).json({
+    error: "Contenido ausente"
+  })
+ }
 
-  if (!note.name) {
-    return res.status(400).send("<h1>Hola querido amigo. Este archivo que intenas enviar no posee el nombre, por favor ingresalo <h1/>")
-  }
+const  note = new Note({
+  name:body.name,
+  number: body.number,
+  important:body.important || false,
+})
 
-  const newNote = {
-    name: note.name,
-    date: new Date(),
-    id: generateId()
-  }
+note.save().then(savedNote=>{
+  res.json(savedNote)
+})
 
-  notes = notes.concat(newNote)
-
-
-  res.json(note)
 })
 
 
 
 app.use(unknownEndpoint)
 
-const PUERTO = process.env.PUERTO || 534
+const PUERTO = process.env.PORT
 app.listen(PUERTO, () => {
   console.log(`el servidor esta escuchando en el puerto: ${PUERTO}`)
 })
