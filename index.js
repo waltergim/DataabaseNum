@@ -21,11 +21,7 @@ morgan.token("data", (req) => {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
- 
 
-
-
- 
 
 app.get("/api/notes", (req, res) => {
 
@@ -72,19 +68,25 @@ app.delete("/api/notes/:id", (req, res,next) => {
 
  
 
-app.post("/api/notes", (req, res) => {
- const body = req.body
+app.post("/api/notes", (req, res,next) => {
+ const {name, number} = req.body
+ 
+
  
 const  note = new Note({
-  name: body.name,
-  number: body.number,
+  name: name,
+  number: number,
 })
 
+if(name == Note.name){
+  res.status(400).json({error:"Maestro este nombre ya existe"})
+ }
 
-note.save().then(savedNote=>{
-  res.json(savedNote)
-}) 
-
+note.save().then(savedNote=> savedNote.toJSON()) 
+.then(savedAndFormattedNote =>{
+  res.json(savedAndFormattedNote)
+})
+.catch(error => next(error))
 })
 
 app.put("/api/notes/:id", (request, response, next) => {
@@ -116,7 +118,7 @@ const Errores = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'mal formato de id' })
   } else if (error.name === "ValidationError") {
-    return response.status(400).json({ error: error.message });
+    return response.status(400).json({ error: error.message, msg: "por favor ingrese un nombre concha su madre" });
   }
 
   next(error)

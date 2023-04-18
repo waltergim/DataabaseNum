@@ -14,11 +14,23 @@ mongoose.connect(url)
     console.log('Error no se pudo conectar a la base de datos de mongoose:', error.message)
   })
 
+ 
   
 const notesSchema = new mongoose.Schema({
-    name: String,
-    number: Number,
-    date: Date,
+    name: {
+      type: String,
+      minlength: 3,
+      required: true,
+    },
+    number: {
+      type: String,
+      minlength: 8,
+      require: true,
+    },
+    date: {
+      type: Date,
+      require: true,
+    },
     important: Boolean,
   })
   
