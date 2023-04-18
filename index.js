@@ -9,7 +9,7 @@ const Note = require('./models/note')
 
 app.use(express.json())
 app.use(cors())
-app.use(express.static("dist"));
+app.use(express.static("dists"));
 
  
  
